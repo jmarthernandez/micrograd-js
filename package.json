@@ -1,0 +1,11 @@
+{
+  "scripts": {
+    "build": "tsc && npm run build:cp-public",
+    "dev": "tsc -w && npm run build:cp-public",
+    "build:cp-public": "cp ./public/** ./dist",
+    "type": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}
