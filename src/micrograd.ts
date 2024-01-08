@@ -8,14 +8,16 @@ interface ValueProps {
   label?: string;
 }
 
-class Value {
+export class Value {
   data: number;
+  grad: number;
   children: [] | [Value] | [Value, Value];
   op: "" | "+" | "*" | "pow" | "exp" | "tanh";
   label: string;
 
   constructor(props: ValueProps) {
     this.data = props.data;
+    this.grad = 0.0;
     this.children = props.children || [];
     this.op = props.op || "";
     this.label = props.label || "";
@@ -88,8 +90,6 @@ class Value {
   }
 
   exp() {
-    const x = this.data;
-
     const out = new Value({
       data: Math.exp(this.data),
       children: [this],
@@ -109,42 +109,3 @@ class Value {
     return out;
   }
 }
-
-// create new variables
-const x1 = new Value({ data: 2.0, label: "x1" });
-const w1 = new Value({ data: -3.0, label: "w1" });
-const x1w1 = x1.mul(w1);
-x1w1.label = "x1w1";
-
-const x2 = new Value({ data: 0.0, label: "x2" });
-const w2 = new Value({ data: 1.0, label: "w2" });
-const x2w2 = x2.mul(w2);
-x2w2.label = "x2w2";
-
-const x1w1x2w2 = x1w1.add(x2w2);
-x1w1x2w2.label = "x1w1x2w2";
-
-const b = new Value({ data: 6.8813735870195432, label: "b" });
-
-const n = x1w1x2w2.add(b);
-n.label = "n";
-
-const o = n.tanh();
-o.label = "o";
-
-console.log(o.data);
-console.log(o);
-
-function prettyPrintValue(node: Value, indent = 0) {
-  const indentation = " ".repeat(indent);
-  const opString = node.op ? ` (${node.op})` : "";
-  console.log(indentation + node.label + opString + ": " + node.data);
-
-  if (node.children.length > 0) {
-    node.children.forEach((child) => {
-      prettyPrintValue(child, indent + 2);
-    });
-  }
-}
-
-prettyPrintValue(o);
