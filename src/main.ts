@@ -39,7 +39,17 @@ function prettyPrintValue(node: Value, indent = 0) {
   return str;
 }
 
-console.log(prettyPrintValue(o));
+// Get the 'graph' element
+const graphElement = document.getElementById("graph");
+
+// Create a 'pre' element
+const preElement = document.createElement("pre");
+
+// Call the prettyPrintValue function and set its result as the 'pre' element's text content
+preElement.textContent = prettyPrintValue(o);
+
+// Append the 'pre' element to the 'graph' element
+graphElement?.appendChild(preElement);
 
 type Data = {
   label: string;
@@ -117,4 +127,4 @@ function createGraph(data: any) {
 }
 
 // Call the createGraph function with the oDataObject
-createGraph(oDataObject);
+// createGraph(oDataObject);
