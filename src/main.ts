@@ -22,9 +22,7 @@ n.label = "n";
 
 const o = n.tanh();
 o.label = "o";
-
-console.log(o.data);
-console.log(o);
+o.backward();
 
 function prettyPrintValue(node: Value, indent = 0) {
   let str = "";
@@ -77,8 +75,8 @@ function createDataObject(node: Value) {
 
   return dataObject;
 }
-
-const oDataObject = createDataObject(o);
+// o.backward();
+// const oDataObject = createDataObject(o);
 
 // Create a function to generate the graph
 function createGraph(data: any) {
