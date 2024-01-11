@@ -158,7 +158,7 @@ export class Value {
 
     buildTopo(this);
     this.grad = 1.0;
-    console.log(topo);
+    // walk the graph in reverse
     for (let i = topo.length - 1; i >= 0; i--) {
       topo[i]._backward();
     }

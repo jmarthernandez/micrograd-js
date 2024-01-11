@@ -1,5 +1,5 @@
-import * as d3 from "d3";
-import { Value } from "./micrograd.ts";
+import { Value } from "./value.ts";
+import { MLP } from "./mlp.ts";
 
 // Create new weights and parameters and multiple
 const x1 = new Value({ data: 2.0, label: "x1" });
@@ -37,6 +37,11 @@ function prettyPrintValue(node: Value, indent = 0) {
   return str;
 }
 
+const x = [2.0, 3.0, -1.0].map((data) => new Value({ data }));
+const mlp = new MLP(3, [4, 4, 1]);
+const result = mlp.forward(x);
+console.log(result); // Output the result of the forward pass
+
 // Get the 'graph' element
 const graphElement = document.getElementById("graph");
 
@@ -44,85 +49,10 @@ const graphElement = document.getElementById("graph");
 const preElement = document.createElement("pre");
 
 // Call the prettyPrintValue function and set its result as the 'pre' element's text content
-preElement.textContent = prettyPrintValue(o);
+
+if (!Array.isArray(result)) {
+  preElement.textContent = prettyPrintValue(result);
+}
 
 // Append the 'pre' element to the 'graph' element
 graphElement?.appendChild(preElement);
-
-type Data = {
-  label: string;
-  data: number;
-  grad: number;
-  op: string;
-  children: Data[];
-};
-
-function createDataObject(node: Value) {
-  const dataObject: Data = {
-    label: node.label,
-    data: node.data,
-    grad: node.grad,
-    op: node.op,
-    children: [],
-  };
-
-  if (node.children.length > 0) {
-    for (const child of node.children) {
-      const childData: Data = createDataObject(child);
-      dataObject.children.push(childData);
-    }
-  }
-
-  return dataObject;
-}
-// o.backward();
-// const oDataObject = createDataObject(o);
-
-// Create a function to generate the graph
-function createGraph(data: any) {
-  // Create an SVG element for the visualization
-  const svg = d3
-    .select("#graph")
-    .append("svg")
-    .attr("width", 800)
-    .attr("height", 400);
-  const g = svg.append("g").attr("transform", "translate(50,50)");
-
-  // Create a hierarchical layout
-  const root = d3.hierarchy(data);
-  const treeLayout = d3.tree().size([600, 300]);
-  const treeData = treeLayout(root);
-
-  // Create links between nodes
-  g.selectAll(".link")
-    .data(treeData.links())
-    .enter()
-    .append("path")
-    .attr("class", "link")
-    .attr("d", (d: any) => {
-      return `M${d.source.x},${d.source.y} L${d.target.x},${d.target.y}`;
-    });
-
-  // Create nodes with labels and data
-  const nodes = g
-    .selectAll(".node")
-    .data(treeData.descendants())
-    .enter()
-    .append("g")
-    .attr("class", "node")
-    .attr("transform", (d: any) => `translate(${d.x},${d.y})`);
-
-  nodes.append("circle").attr("r", 8);
-
-  nodes
-    .append("text")
-    .attr("dy", "0.35em")
-    .attr("x", (d: any) => (d.children ? -13 : 13))
-    .style("text-anchor", (d: any) => (d.children ? "end" : "start"))
-    .text((d: any) => {
-      return `${d.data.label}: data = ${d.data.data} grad = ${d.data.grad} (${d.data.op})`;
-    });
-}
-
-// Call the createGraph function with the oDataObject
-// createGraph(oDataObject);
