@@ -88,8 +88,12 @@ export class Value {
 
   // Backward pass for the division operation (self / other)
   div(other: number | Value) {
-    const otherValue = this.coerceToValue(other);
-    return this.mul(otherValue.pow(-1));
+    const divisor = this.coerceToValue(other);
+
+    if (divisor.data === 0) {
+      throw new Error("Division by zero is not allowed");
+    }
+    return this.mul(divisor.pow(-1));
   }
 
   // Backward pass for the power operation (self ** other)
