@@ -45,6 +45,7 @@ export class Value {
       data: this.data + otherValue.data,
       children: [this, otherValue],
       op: "+",
+      label: `${this.label} + ${otherValue.label}`,
     });
 
     out._backward = () => {
@@ -75,6 +76,7 @@ export class Value {
       data: this.data * otherValue.data,
       children: [this, otherValue],
       op: "*",
+      label: `${this.label} * ${otherValue.label}`,
     });
 
     out._backward = () => {
@@ -102,7 +104,7 @@ export class Value {
       data: this.data ** other,
       children: [this],
       op: `pow`,
-      label: `**${other}`,
+      label: `${this.label}**${other}`,
     });
 
     out._backward = () => {

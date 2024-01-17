@@ -22,12 +22,10 @@ class Neuron {
     for (let i = 0; i < this.w.length; i++) {
       const wx = this.w[i].mul(x[i]);
       wx.label = `w${i + 1}x${i + 1}`;
-      wx.add(this.b);
+      weightedSum = weightedSum.add(wx); // Accumulate the terms
     }
     // Apply the tanh activation function
     const out = weightedSum.tanh();
-    console.log(weightedSum);
-    console.log(out);
 
     return out;
   }

@@ -13,7 +13,6 @@ const x2w2 = x2.mul(w2);
 x2w2.label = "x2w2";
 
 const x1w1x2w2 = x1w1.add(x2w2);
-x1w1x2w2.label = "x1w1 + x2w2";
 
 const b = new Value({ data: 6.8813735870195432, label: "b" });
 
@@ -37,10 +36,12 @@ function prettyPrintValue(node: Value, indent = 0) {
   return str;
 }
 
-const x = [2.0, 3.0, -1.0].map((data) => new Value({ data }));
+const x = [2.0, 3.0, -1.0].map(
+  (data, i) => new Value({ data, label: `x${i + 1}` })
+);
 const mlp = new MLP(3, [4, 4, 1]);
 const result = mlp.forward(x);
-console.log(result); // Output the result of the forward pass
+console.log(result);
 
 // Get the 'graph' element
 const graphElement = document.getElementById("graph");
